@@ -1,4 +1,4 @@
-# AppleShove
+# AppleShove [![Code Climate](https://codeclimate.com/github/tboyko/apple_shove.png)](https://codeclimate.com/github/tboyko/apple_shove)
 
 APN Service Provider. More powerful than a push...
 
