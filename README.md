@@ -77,7 +77,7 @@ We also have a feedback mechanism in place:
 
     Example usage:
 
-    bundle exec rake apple_shove:start connection_limit=100 log_dir=log
+    bundle exec rake apple_shove:start connection_limit=100 log_dir=/var/log
 
 ## Installation
 
