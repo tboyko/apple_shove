@@ -35,20 +35,6 @@ This architecture accomplishes a few things:
 
 Willing to give it a try? Onward...
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'apple_shove'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install apple_shove
-
 ## Usage
 
 ### Sending Notifications
@@ -92,6 +78,20 @@ We also have a feedback mechanism in place:
     Example usage:
 
     bundle exec rake apple_shove:start connection_limit=100 log_dir=log
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+    gem 'apple_shove'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install apple_shove
 
 ## Additional Notes
 
