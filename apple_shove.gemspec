@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["tboyko@unwiredrevolution.com"]
   spec.description   = %q{APN Service Provider. More powerful than a push...}
   spec.summary       = %q{}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/tboyko/apple_shove"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

@@ -97,9 +97,9 @@ Or install it yourself as:
 
 ### TCP Keep-Alives
 
-Apple Shove has the ability to maintain connections to Apple for long durations of time without sending a notification. These connections will generally stay open, however, intermediate NATs and firewalls may expire and close the connection prematurely. 
+AppleShove has the ability to maintain connections to Apple for long durations of time without sending a notification. These connections will generally stay open, however, intermediate NATs and firewalls may expire and close the connection prematurely. 
 
-To combat this, Apple Shove enables keep-alive on all connections to Apple. Apple Shove is not able to set the interval between keep-alives however, as this is generally managed by the operating system. If you are aware of a relatively short NAT or firewall timer, you can manually shorten your OS's keep-alive timer to be shorter than the timer. As this likely breaks the portability of your code, you can alternatively change the `AppleShove::CONFIG[:reconnect_timer]` to a value less than the NAT/firewall timer. This will force Apple Shove to re-establish the SSL connection after enough idle time has passed.
+To combat this, AppleShove enables keep-alive on all connections to Apple. AppleShove is not able to set the interval between keep-alives however, as this is generally managed by the operating system. If you are aware of a relatively short NAT or firewall timer, you can manually shorten your OS's keep-alive timer to be shorter than the timer. As this likely breaks the portability of your code, you can alternatively change the `AppleShove::CONFIG[:reconnect_timer]` to a value less than the NAT/firewall timer. This will force AppleShove to re-establish the SSL connection after enough idle time has passed.
 
 For reference, we have observed the following keep-alive timeout values:
 
