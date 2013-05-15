@@ -81,6 +81,8 @@ We also have a feedback mechanism in place:
 
 ## Installation
 
+If you haven't already, install redis. It's normally available via brew, apt-get, and yum, but you can also build from [source](http://redis.io/download).
+
 Add this line to your application's Gemfile:
 
     gem 'apple_shove'
