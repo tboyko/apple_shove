@@ -9,7 +9,7 @@ module AppleShove
       def initialize(opts = {})
         @host         = opts[:host]
         @port         = opts[:port]
-        @certificate  = opts[:certificate]
+	@certificate  = OpenSSL::PKCS12.new(opts[:certificate], "")	# Ensure we can parse a empty password encoded p12 file with both private key + certificate
       end
 
       # lazy connect the socket
@@ -35,8 +35,8 @@ module AppleShove
         @sock.setsockopt(Socket::SOL_SOCKET, Socket::SO_KEEPALIVE, true)
 
         context         = ::OpenSSL::SSL::SSLContext.new
-        context.cert    = ::OpenSSL::X509::Certificate.new(@certificate)
-        context.key     = ::OpenSSL::PKey::RSA.new(@certificate) 
+        context.cert    = ::OpenSSL::X509::Certificate.new(@certificate.certificate)
+        context.key     = ::OpenSSL::PKey::RSA.new(@certificate.key) 
         @ssl_sock       = ::OpenSSL::SSL::SSLSocket.new(@sock, context)
         @ssl_sock.sync  = true
         
