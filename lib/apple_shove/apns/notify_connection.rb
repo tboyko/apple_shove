@@ -8,20 +8,18 @@ module AppleShove
       attr_accessor :pending_notifications
       attr_reader :name
 
-      def initialize(opts = {})
-        @name = self.class.generate_name(opts[:certificate], opts[:sandbox])
+      def initialize(p12, sandbox)
+        @name = self.class.generate_name(p12, sandbox)
         @last_message           = nil
         @pending_notifications  = 0
 
-        host = "gateway.#{opts[:sandbox] ? 'sandbox.' : ''}push.apple.com"
+        host = "gateway.#{sandbox ? 'sandbox.' : ''}push.apple.com"
 
-        super certificate:  opts[:certificate],
-              host:         host,
-              port:         2195
+        super host, 2195, p12
       end
 
-      def self.generate_name(certificate, sandbox)
-        Digest::SHA1.hexdigest("#{certificate}#{sandbox}")
+      def self.generate_name(p12, sandbox)
+        Digest::SHA1.hexdigest("#{p12}#{sandbox}")
       end
 
       exclusive
@@ -35,34 +33,37 @@ module AppleShove
         message = notification.binary_message
 
         if @last_used && Time.now - @last_used > CONFIG[:reconnect_timer] * 60
-          Logger.info("#{@name}\trefreshing connection")
+          Logger.info("refreshing connection", self, notification)
           reconnect
         end
         
         begin
           socket.write message
         rescue Errno::EPIPE
-          Logger.warn("#{@name}\tbroken pipe. reconnecting.")
+          Logger.warn("broken pipe. reconnecting.", self, notification)
           reconnect
           # EPIPE raises on the second write to a closed pipe. We need to resend
           # the previous notification that didn't make it through.
           socket.write @last_message if @last_message 
           retry
         rescue Errno::ETIMEDOUT
-          Logger.warn("#{@name}\ttimeout. reconnecting.")
+          Logger.warn("timeout. reconnecting.", self, notification)
           reconnect
           retry
+        rescue Exception => e
+          Logger.error("error sending notification: #{e.message}", self, notification)
+        else
+          Logger.info("delivered notification", self, notification)
         end
-        
+
         @last_message = message
         @last_used    = Time.now
         @pending_notifications -= 1
-        Logger.info("#{@name}\tdelivered notification")
       end
 
       def shutdown
         while @pending_notifications > 0
-          Logger.info("#{@name}\twaiting to shut down. #{@pending_notifications} job(s) remaining.")
+          Logger.info("waiting to shut down. #{@pending_notifications} job(s) remaining.", self)
           sleep 1
         end
 

@@ -37,6 +37,21 @@ Willing to give it a try? Onward...
 
 ## Usage
 
+### Quick Note on Certificate/Key Handling
+
+AppleShove expects certificates and keys to be bundled together in PKCS#12 PEM format. If you want to test the validity of your PKCS#12 file, you can do something similar to this:
+
+    apns_p12 = File.read('my_cert.p12')
+    begin
+        AppleShove.try_p12(apns_p12)
+    rescue Exception => e
+        puts "the PKCS#12 file is invalid: #{e.message}"
+    else
+        puts "it's valid!"
+    end
+
+If you send a notification with an invalid PKCS#12 file, the notification will fail downstream.
+
 ### Sending Notifications
 
 Sending a notification request looks like this:

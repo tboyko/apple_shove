@@ -31,16 +31,15 @@ module AppleShove
     private
 
     def get_connection(notification)
-      key         = APNS::NotifyConnection.generate_name(notification.certificate, notification.sandbox)
+      key         = APNS::NotifyConnection.generate_name(notification.p12, notification.sandbox)
       connection  = @connections[key] 
 
       unless connection
         retire_oldest_connection if @connections.count >= @max_connections
 
-        connection        = APNS::NotifyConnection.new  certificate: notification.certificate,
-                                                        sandbox:     notification.sandbox
+        connection        = APNS::NotifyConnection.new notification.p12, notification.sandbox
         @connections[key] = connection
-        Logger.info "#{connection.name}\tcreated connection to APNS (#{@connections.count} total)"  
+        Logger.info "created connection to APNS (#{@connections.count} total)", connection  
       end
     
       connection
@@ -53,7 +52,7 @@ module AppleShove
         @connections.delete key
         conn.shutdown
         
-        Logger.info "#{conn_name}\tdestroyed connection to APNS (#{@connections.count} total)"
+        Logger.info "destroyed connection to APNS (#{@connections.count} total)", connection
       end
     end
     

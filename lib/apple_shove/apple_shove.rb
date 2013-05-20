@@ -1,7 +1,7 @@
 module AppleShove
 
-  def self.notify(certificate, device_token, payload, sandbox = false)
-    notification  = Notification.new  certificate:  certificate,
+  def self.notify(p12, device_token, payload, sandbox = false)
+    notification  = Notification.new  p12:          p12,
                                       device_token: device_token,
                                       payload:      payload,
                                       sandbox:      sandbox
@@ -12,9 +12,8 @@ module AppleShove
     true
   end
 
-  def self.feedback_tokens(certificate, sandbox = false)
-    conn = APNS::FeedbackConnection.new certificate:  certificate,
-                                        sandbox:      sandbox
+  def self.feedback_tokens(p12, sandbox = false)
+    conn = APNS::FeedbackConnection.new p12, sandbox
 
     conn.device_tokens
   end
@@ -30,4 +29,10 @@ module AppleShove
     "queue size:\t#{size}"
   end
 
+  # raises an exception if the p12 string is invalid
+  def self.try_p12(p12)
+    OpenSSLHelper.pkcs12_from_pem(p12)
+    true
+  end
+  
 end

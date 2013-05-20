@@ -19,11 +19,35 @@ module AppleShove
       self
     end
         
-    def self.error(msg); instance.error(msg) end
-    def self.debug(msg); instance.debug(msg) end
-    def self.fatal(msg); instance.fatal(msg) end
-    def self.info(msg); instance.info(msg) end
-    def self.warn(msg); instance.warn(msg) end
-    
+    def self.error(msg, connection = nil, notification = nil)
+      log('error', msg, connection, notification) 
+    end
+
+    def self.debug(msg, connection = nil, notification = nil)
+      log('debug', msg, connection, notification) 
+    end
+
+    def self.fatal(msg, connection = nil, notification = nil)
+      log('fatal', msg, connection, notification) 
+    end
+
+    def self.info(msg, connection = nil, notification = nil)
+      log('info', msg, connection, notification) 
+    end
+
+    def self.warn(msg, connection = nil, notification = nil)
+      log('warn', msg, connection, notification) 
+    end
+
+    private
+
+    def self.log(severity, msg, connection, notification)
+      output = ''
+      output += "#{connection.name}\t" if connection && connection.respond_to?("name")
+      output += "#{notification.device_token}\t" if notification
+      output += msg
+      
+      instance.send(severity, output)
+    end
   end
 end

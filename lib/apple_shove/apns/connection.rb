@@ -6,10 +6,12 @@ module AppleShove
       
       attr_reader :last_used
       
-      def initialize(opts = {})
-        @host         = opts[:host]
-        @port         = opts[:port]
-	@certificate  = OpenSSL::PKCS12.new(opts[:certificate], "")	# Ensure we can parse a empty password encoded p12 file with both private key + certificate
+      def initialize(host, port, p12_string)
+        @host       = host
+        @port       = port
+        @p12_string = p12_string
+
+        @p12        = nil
       end
 
       # lazy connect the socket
@@ -31,12 +33,13 @@ module AppleShove
       private
       
       def connect
-        @sock = TCPSocket.new(@host, @port)
-        @sock.setsockopt(Socket::SOL_SOCKET, Socket::SO_KEEPALIVE, true)
-
+        @p12          ||= OpenSSLHelper.pkcs12_from_pem(@p12_string)
         context         = ::OpenSSL::SSL::SSLContext.new
-        context.cert    = ::OpenSSL::X509::Certificate.new(@certificate.certificate)
-        context.key     = ::OpenSSL::PKey::RSA.new(@certificate.key) 
+        context.cert    = @p12.certificate
+        context.key     = @p12.key
+
+        @sock           = TCPSocket.new(@host, @port)
+        @sock.setsockopt(Socket::SOL_SOCKET, Socket::SO_KEEPALIVE, true)
         @ssl_sock       = ::OpenSSL::SSL::SSLSocket.new(@sock, context)
         @ssl_sock.sync  = true
         

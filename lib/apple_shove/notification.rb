@@ -1,7 +1,7 @@
 module AppleShove
   class Notification
 
-    attr_accessor :certificate, :sandbox, :device_token, :payload
+    attr_accessor :p12, :sandbox, :device_token, :payload
     
     def initialize(attributes = {})
         attributes.each { |k, v| self.send("#{k}=", v) }
