@@ -32,12 +32,12 @@ module AppleShove
       def send(notification)
         message = notification.binary_message
 
-        if @last_used && Time.now - @last_used > CONFIG[:reconnect_timer] * 60
-          Logger.info("refreshing connection", self, notification)
-          reconnect
-        end
-        
         begin
+          if @last_used && Time.now - @last_used > CONFIG[:reconnect_timer] * 60
+            Logger.info("refreshing connection", self, notification)
+            reconnect
+          end
+
           socket.write message
         rescue Errno::EPIPE
           Logger.warn("broken pipe. reconnecting.", self, notification)
