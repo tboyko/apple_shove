@@ -52,7 +52,7 @@ module AppleShove
         @connections.delete key
         conn.shutdown
         
-        Logger.info "destroyed connection to APNS (#{@connections.count} total)", connection
+        Logger.info "destroyed connection to APNS (#{@connections.count} total)", conn_name
       end
     end
     

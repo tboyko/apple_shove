@@ -43,7 +43,13 @@ module AppleShove
 
     def self.log(severity, msg, connection, notification)
       output = ''
-      output += "#{connection.name}\t" if connection && connection.respond_to?("name")
+
+      if connection && connection.respond_to?("name")
+        output += "#{connection.name}\t"
+      elsif connection.kind_of? String
+        output += "#{connection}\t"
+      end
+
       output += "#{notification.device_token}\t" if notification
       output += msg
       
