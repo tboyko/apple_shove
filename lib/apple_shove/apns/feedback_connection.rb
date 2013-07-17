@@ -3,7 +3,7 @@ module AppleShove
     class FeedbackConnection < Connection
 
       def initialize(p12, sandbox)
-        host = "feedback.#{opts[:sandbox] ? 'sandbox.' : ''}push.apple.com"
+        host = "feedback.#{sandbox ? 'sandbox.' : ''}push.apple.com"
 
         super host, 2196, p12
       end
