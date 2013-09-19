@@ -1,10 +1,7 @@
 module AppleShove
 
-  def self.notify(p12, device_token, payload, sandbox = false)
-    notification  = Notification.new  p12:          p12,
-                                      device_token: device_token,
-                                      payload:      payload,
-                                      sandbox:      sandbox
+  def self.notify(params = {})
+    notification = Notification.new params
 
     queue = NotificationQueue.new(CONFIG[:redis_key])
     queue.add(notification)

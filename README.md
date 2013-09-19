@@ -60,18 +60,28 @@ Sending a notification request looks like this:
     token    = '[device token string]'
     payload  = { mdm: '[push magic string]' } # this can also be an app notification
 
-    AppleShove.notify(apns_p12, token, payload)
+    AppleShove.notify p12:             apns_p12,
+                      device_token:    token,
+                      payload:         payload,
+                      expiration_date: Time.now + 60*60, # optional expiration timestamp. defaults to one year in the future.
+                      priority:        5                 # optional. defaults to 10.
 
 Need it to be a sandbox notification?
 
-    sandbox = true
-    AppleShove.notify(apns_p12, token, payload, sandbox)
+    AppleShove.notify p12:             apns_p12,
+                      device_token:    token,
+                      payload:         payload,
+                      sandbox:         true
 
 ### Checking the Feedback Service
 
 We also have a feedback mechanism in place:
 
     tokens_array = AppleShove.feedback_tokens(apns_p12)
+
+    # or, for the sandboxed feedback service:
+
+    tokens_array = AppleShove.feedback_tokens(apns_p12, true)
 
 ### Running the Service
 
