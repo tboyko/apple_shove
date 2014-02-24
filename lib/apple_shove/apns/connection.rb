@@ -22,7 +22,12 @@ module AppleShove
 
       def disconnect
         @ssl_sock.close if @ssl_sock
-        @sock.close     if @sock
+        
+        begin
+          @sock.close if @sock
+        rescue IOError
+          @sock = nil
+        end
       end
 
       def reconnect

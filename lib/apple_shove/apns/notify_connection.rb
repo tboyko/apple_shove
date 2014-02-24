@@ -39,19 +39,12 @@ module AppleShove
           end
 
           socket.write message
-        rescue Errno::EPIPE
-          Logger.warn("broken pipe. reconnecting.", self, notification)
-          reconnect
-          # EPIPE raises on the second write to a closed pipe. We need to resend
-          # the previous notification that didn't make it through.
-          socket.write @last_message if @last_message 
-          retry
-        rescue Errno::ETIMEDOUT
-          Logger.warn("timeout. reconnecting.", self, notification)
-          reconnect
-          retry
         rescue Exception => e
-          Logger.error("error sending notification: #{e.message}", self, notification)
+          handler = WriteExceptionHandler.new(e)
+          Logger.warn(handler.message, self, notification)
+          reconnect                   if handler.reconnect?
+          socket.write @last_message  if handler.rewrite? && @last_message
+          retry                       if handler.retry?
         else
           Logger.info("delivered notification", self, notification)
         end

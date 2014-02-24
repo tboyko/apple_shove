@@ -28,7 +28,7 @@ module AppleShove
     # Apple APNS format
     def binary_message
       payload_json  = @payload.to_json
-
+      
       frame = [ [ 1, 32,                  @device_token         ].pack('CnH64'),
                 [ 2, payload_json.length, payload_json          ].pack('Cna*'),
                 [ 3, 4,                   ''                    ].pack('CnA4'),
