@@ -1,4 +1,4 @@
-# AppleShove [![Code Climate](https://codeclimate.com/github/tboyko/apple_shove.png)](https://codeclimate.com/github/tboyko/apple_shove)
+# AppleShove [![Code Climate](https://codeclimate.com/github/tboyko/apple_shove.png)](https://codeclimate.com/github/tboyko/apple_shove) [![Build Status](https://travis-ci.org/tboyko/apple_shove.png?branch=master)](https://travis-ci.org/tboyko/apple_shove)
 
 APN Service Provider. More powerful than a push...
 
