@@ -3,7 +3,7 @@ require 'rake'
 include Rake::DSL
 
 namespace :apple_shove do
-    
+
   desc 'Display service statistics every second'
   task :stats do
     require 'apple_shove'
@@ -39,16 +39,15 @@ namespace :apple_shove do
     exec "ruby #{path_to_daemon} status"
   end
 
-  private 
-  
+  private
+
   def path_to_daemon
     File.join(File.dirname(__FILE__), '..', '..', 'script', 'daemon')
   end
 
   def argument_string
-    watched_args = ['log_dir', 'pid_dir', 'connection_limit']
+    watched_args = ['log_dir', 'pid_dir', 'connection_limit', 'config']
     arg_str = watched_args.collect { |a| ENV[a] ? "--#{a}=#{ENV[a]}" : nil }.compact.join(' ')
-    
     arg_str.empty? ? nil : " -- #{arg_str}"
   end
 

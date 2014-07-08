@@ -2,7 +2,7 @@
 
 require 'daemons'
 require 'apple_shove'
-
+require 'pry'
 # process command line arguments
 
 args = {}
@@ -13,7 +13,7 @@ ARGV.each do |arg|
   end
 end
 
-options = { 
+options = {
   stop_proc:  Proc.new { puts "Stopping daemon" },
   dir_mode:   :script
 }
@@ -25,13 +25,16 @@ if args[:log_dir]
   options[:log_dir]     = args[:log_dir]
 end
 
-Daemons.run_proc('apple_shove', options) do  
+require File.expand_path(args[:config], Dir.pwd) if args[:config]
+
+Daemons.run_proc('apple_shove', options) do
   # max of 15 connections recommended by Apple: http://bit.ly/YNHTfE
   # note: this may be per-certificate, in which case we can crank this number
   # up much higher.
   conn_limit = args[:connection_limit] || 100
 
   puts "Starting daemon with a APNS connection limit of #{conn_limit}"
+  puts AppleShove::CONFIG
 
 	dmp = AppleShove::Demultiplexer.new max_apns_connections: conn_limit
   dmp.start

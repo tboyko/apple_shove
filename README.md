@@ -85,6 +85,9 @@ E.g. in Rails initializer with redistogo:
     REDIS = Redis.new(host: redis_url.host, port: redis_url.port, password: redis_url.password)
     AppleShove::CONFIG[:redis_server] = REDIS
 
+E.g. Procfile in heroku
+
+    apn_push: bundle exec rake apple_shove:run config=config/initializers/redis_loader.rb
 
 ### Checking the Feedback Service
 
