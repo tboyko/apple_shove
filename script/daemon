@@ -2,7 +2,6 @@
 
 require 'daemons'
 require 'apple_shove'
-require 'pry'
 # process command line arguments
 
 args = {}
