@@ -3,7 +3,7 @@ module AppleShove
   def self.notify(params = {})
     notification = Notification.new params
 
-    queue = NotificationQueue.new(CONFIG[:redis_key])
+    queue = NotificationQueue.new(CONFIG[:redis_key], CONFIG[:redis_server])
     queue.add(notification)
 
     true
@@ -16,13 +16,10 @@ module AppleShove
   end
 
   def self.stats
-    redis = ::Redis.new
-    queue = NotificationQueue.new(CONFIG[:redis_key], redis)
+    queue = NotificationQueue.new(CONFIG[:redis_key], CONFIG[:redis_server])
 
     size = queue.size
 
-    redis.quit
-    
     "queue size:\t#{size}"
   end
 
@@ -31,5 +28,5 @@ module AppleShove
     OpenSSLHelper.pkcs12_from_pem(p12)
     true
   end
-  
+
 end
