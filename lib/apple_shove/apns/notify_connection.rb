@@ -33,7 +33,7 @@ module AppleShove
         message = notification.binary_message
 
         begin
-          if @last_used && Time.now - @last_used > CONFIG[:reconnect_timer] * 60
+          if @last_used && Time.now - safe_last_used > CONFIG[:reconnect_timer] * 60
             Logger.info("refreshing connection", self, notification)
             reconnect
           end
