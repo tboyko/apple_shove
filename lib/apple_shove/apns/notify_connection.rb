@@ -23,7 +23,7 @@ module AppleShove
       end
 
       exclusive
-      
+
       def connect
         super
         @last_used = Time.now
@@ -42,16 +42,22 @@ module AppleShove
         rescue Exception => e
           handler = WriteExceptionHandler.new(e)
           Logger.warn(handler.message, self, notification)
-          reconnect                   if handler.reconnect?
-          socket.write @last_message  if handler.rewrite? && @last_message
+
+          begin
+            reconnect                   if handler.reconnect?
+            socket.write @last_message  if handler.rewrite? && @last_message
+          rescue Exception => e
+            Logger.warn("failed while trying to recover from write error", self, notification)
+          end
+
           retry                       if handler.retry?
         else
           Logger.info("delivered notification", self, notification)
-        end
 
-        @last_message = message
-        @last_used    = Time.now
-        @pending_notifications -= 1
+          @last_message = message
+          @last_used    = Time.now
+          @pending_notifications -= 1
+        end
       end
 
       def shutdown
