@@ -56,8 +56,9 @@ module AppleShove
 
           @last_message = message
           @last_used    = Time.now
-          @pending_notifications -= 1
         end
+
+        @pending_notifications -= 1
       end
 
       def shutdown
