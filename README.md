@@ -6,7 +6,7 @@ APN Service Provider. More powerful than a push...
 
 A quick look at [The Ruby Toolbox](https://www.ruby-toolbox.com/search?utf8=✓&q=apns) reveals a ton of pre-existing APNS gems. Why recreate the wheel?
 
-We needed an APNS package for use with a many-tenant MDM platform. Specifically, we needed the ability to quickly push many notifications to devices spanning across *many* push certificates. 
+We needed an APNS package for use with a many-tenant MDM platform. Specifically, we needed the ability to quickly push many notifications to devices spanning across *many* push certificates.
 
 ### What about [arthurnn/apn_sender](https://github.com/arthurnn/apn_sender)?
 
@@ -73,6 +73,19 @@ Need it to be a sandbox notification?
                       payload:         payload,
                       sandbox:         true
 
+### Run on target redis server
+
+You can set redis server via config:
+
+    AppleShove::CONFIG[:redis_server] = REDIS # REDIS is your initialized redis connection
+
+E.g. in Rails initializer with redistogo:
+
+    redis_url = URI.parse(ENV["REDISTOGO_URL"])
+    REDIS = Redis.new(host: redis_url.host, port: redis_url.port, password: redis_url.password)
+    AppleShove::CONFIG[:redis_server] = REDIS
+
+
 ### Checking the Feedback Service
 
 We also have a feedback mechanism in place:
@@ -95,7 +108,7 @@ We also have a feedback mechanism in place:
 #### Optional Command Line Arguments
 
     log_dir:          specify an absolute path if you want to log
-    pid_dir:          specify an absolute or relative path where the PID file 
+    pid_dir:          specify an absolute or relative path where the PID file
                       is to be stored. Defaults to the current directory.
     connection_limit: maximum number of simultaneous connections to Apple
                       allowed.
@@ -124,7 +137,7 @@ Or install it yourself as:
 
 ### TCP Keep-Alives
 
-AppleShove has the ability to maintain connections to Apple for long durations of time without sending a notification. These connections will generally stay open, however, intermediate NATs and firewalls may expire and close the connection prematurely. 
+AppleShove has the ability to maintain connections to Apple for long durations of time without sending a notification. These connections will generally stay open, however, intermediate NATs and firewalls may expire and close the connection prematurely.
 
 To combat this, AppleShove enables keep-alive on all connections to Apple. AppleShove is not able to set the interval between keep-alives however, as this is generally managed by the operating system. If you are aware of a relatively short NAT or firewall timer, you can manually shorten your OS's keep-alive timer to be shorter than the timer. As this likely breaks the portability of your code, you can alternatively change the `AppleShove::CONFIG[:reconnect_timer]` to a value less than the NAT/firewall timer. This will force AppleShove to re-establish the SSL connection after enough idle time has passed.
 
